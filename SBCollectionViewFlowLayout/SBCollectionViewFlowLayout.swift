@@ -41,7 +41,7 @@ private class SBCollectionReusableView: UICollectionReusableView {
 
 class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
-    private var decorationViewAttrs:[UICollectionViewLayoutAttributes] = []
+    private var decorationViewAttrs: [UICollectionViewLayoutAttributes] = []
     
     override func prepare() {
         super.prepare()
@@ -52,9 +52,10 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
             return
         }
         
-        self.decorationViewAttrs.removeAll()
+        // 1、注册
         self.register(SBCollectionReusableView.classForCoder(), forDecorationViewOfKind: SectionBackground)
         
+        self.decorationViewAttrs.removeAll()
         for section in 0..<numberOfSections {
             guard let numberOfItems = self.collectionView?.numberOfItems(inSection: section),
                 numberOfItems > 0,
@@ -80,6 +81,7 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
                 sectionFrame.size.height += sectionInset.top + sectionInset.bottom
             }
             
+            // 2、定义
             let attr = SBCollectionViewLayoutAttributes(forDecorationViewOfKind: SectionBackground, with: IndexPath(item: 0, section: section))
             attr.frame = sectionFrame
             attr.zIndex = -1
@@ -92,6 +94,7 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
         var attrs = super.layoutAttributesForElements(in: rect)
         for attr in self.decorationViewAttrs {
             if rect.intersects(attr.frame) {
+                // 3、返回
                 attrs?.append(attr)
             }
         }

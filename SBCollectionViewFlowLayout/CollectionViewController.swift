@@ -15,9 +15,9 @@ class CollectionViewController: UICollectionViewController, SBCollectionViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.title = "SectionBackground"
         self.collectionView?.backgroundColor = UIColor.white
         self.collectionView?.alwaysBounceVertical = true
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
     
     override func didReceiveMemoryWarning() {
@@ -36,9 +36,9 @@ class CollectionViewController: UICollectionViewController, SBCollectionViewDele
         } else if section == 1 {
             return 0
         } else if section == 2 {
-            return 5
+            return 12
         }
-        return 4
+        return 19
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -53,7 +53,6 @@ class CollectionViewController: UICollectionViewController, SBCollectionViewDele
         let numberOfItems = collectionView.numberOfItems(inSection: section)
         return numberOfItems > 0 ? UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10) : UIEdgeInsets.zero
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, backgroundColorForSectionAt section: Int) -> UIColor {
         if section == 0 {
