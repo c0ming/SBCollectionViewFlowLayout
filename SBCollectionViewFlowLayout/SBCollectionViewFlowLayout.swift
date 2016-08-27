@@ -92,12 +92,9 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var attrs = super.layoutAttributesForElements(in: rect)
-        for attr in self.decorationViewAttrs {
-            if rect.intersects(attr.frame) {
-                // 3、返回
-                attrs?.append(attr)
-            }
-        }
-        return attrs
+        attrs?.append(contentsOf: self.decorationViewAttrs.filter {
+            return rect.intersects($0.frame)
+        })
+        return attrs // 3、返回
     }
 }
