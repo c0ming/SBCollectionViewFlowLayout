@@ -43,6 +43,32 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
     private var decorationViewAttrs: [UICollectionViewLayoutAttributes] = []
     
+    // MARK: - Init
+    override init() {
+        super.init()
+        
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        setup()
+    }
+    
+    // MARK: - Setup
+    
+    func setup() {
+        // 1、注册
+        self.register(SBCollectionReusableView.classForCoder(), forDecorationViewOfKind: SectionBackground)
+    }
+    
+    // MARK: -
+    
     override func prepare() {
         super.prepare()
         
@@ -51,9 +77,6 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
             else {
             return
         }
-        
-        // 1、注册
-        self.register(SBCollectionReusableView.classForCoder(), forDecorationViewOfKind: SectionBackground)
         
         self.decorationViewAttrs.removeAll()
         for section in 0..<numberOfSections {
@@ -70,7 +93,7 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
             }
             
             var sectionFrame = firstItem.frame.union(lastItem.frame)
-            sectionFrame.origin.x -= sectionInset.left
+            sectionFrame.origin.x = 0
             sectionFrame.origin.y -= sectionInset.top
             
             if self.scrollDirection == .horizontal {
