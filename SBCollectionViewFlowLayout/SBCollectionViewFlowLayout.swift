@@ -120,4 +120,13 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
         })
         return attrs // 3、返回
     }
+    
+    override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        if elementKind == SectionBackground {
+            return self.decorationViewAttrs[indexPath.section]
+        } else {
+            return super.layoutAttributesForDecorationView(ofKind: elementKind, at: indexPath)
+        }
+    }
+    
 }
