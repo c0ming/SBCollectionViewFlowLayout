@@ -113,6 +113,33 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
         }
     }
     
+    override func initialLayoutAttributesForAppearingDecorationElement(ofKind elementKind: String,
+                                                                       at decorationIndexPath: IndexPath)
+        -> UICollectionViewLayoutAttributes?
+    {
+        if elementKind == SectionBackground {
+            let attrs = self.decorationViewAttrs[decorationIndexPath.section]
+            attrs.zIndex = -1
+            return attrs
+        } else {
+            return super.initialLayoutAttributesForAppearingDecorationElement(
+                ofKind: elementKind,
+                at: decorationIndexPath
+            )
+        }
+    }
+    
+    override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath)
+        -> UICollectionViewLayoutAttributes?
+    {
+        if let attrs = super.initialLayoutAttributesForAppearingItem(at: itemIndexPath) {
+            attrs.zIndex = 1 // 设为0时还有可能被覆盖
+            return attrs
+        } else {
+            return nil
+        }
+    }
+    
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var attrs = super.layoutAttributesForElements(in: rect)
         attrs?.append(contentsOf: self.decorationViewAttrs.filter {
@@ -121,7 +148,9 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
         return attrs // 3、返回
     }
     
-    override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+    override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath)
+        -> UICollectionViewLayoutAttributes?
+    {
         if elementKind == SectionBackground {
             return self.decorationViewAttrs[indexPath.section]
         } else {
