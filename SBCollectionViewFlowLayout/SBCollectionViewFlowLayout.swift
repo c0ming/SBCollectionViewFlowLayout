@@ -23,7 +23,24 @@ extension SBCollectionViewDelegateFlowLayout {
 }
 
 private class SBCollectionViewLayoutAttributes: UICollectionViewLayoutAttributes {
-    var backgroundColor = UIColor.clear
+    var backgroundColor = UIColor.white
+
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! SBCollectionViewLayoutAttributes
+        copy.backgroundColor = self.backgroundColor
+        return copy
+    }
+    
+    override func isEqual(_ object: Any?) -> Bool {
+        guard let rhs = object as? SBCollectionViewLayoutAttributes else {
+            return false
+        }
+        
+        if !self.backgroundColor.isEqual(rhs.backgroundColor) {
+            return false
+        }
+        return super.isEqual(object)
+    }
 }
 
 private class SBCollectionReusableView: UICollectionReusableView {
@@ -75,7 +92,7 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
         guard let numberOfSections = self.collectionView?.numberOfSections,
             let delegate = self.collectionView?.delegate as? SBCollectionViewDelegateFlowLayout
             else {
-            return
+                return
         }
         
         self.decorationViewAttrs.removeAll()
@@ -84,7 +101,7 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
                 numberOfItems > 0,
                 let firstItem = self.layoutAttributesForItem(at: IndexPath(item: 0, section: section)),
                 let lastItem = self.layoutAttributesForItem(at: IndexPath(item: numberOfItems - 1, section: section)) else {
-                continue
+                    continue
             }
             
             var sectionInset = self.sectionInset
@@ -109,34 +126,8 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
             attr.frame = sectionFrame
             attr.zIndex = -1
             attr.backgroundColor = delegate.collectionView(self.collectionView!, layout: self, backgroundColorForSectionAt: section)
+            
             self.decorationViewAttrs.append(attr)
-        }
-    }
-    
-    override func initialLayoutAttributesForAppearingDecorationElement(ofKind elementKind: String,
-                                                                       at decorationIndexPath: IndexPath)
-        -> UICollectionViewLayoutAttributes?
-    {
-        if elementKind == SectionBackground {
-            let attrs = self.decorationViewAttrs[decorationIndexPath.section]
-            attrs.zIndex = -1
-            return attrs
-        } else {
-            return super.initialLayoutAttributesForAppearingDecorationElement(
-                ofKind: elementKind,
-                at: decorationIndexPath
-            )
-        }
-    }
-    
-    override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath)
-        -> UICollectionViewLayoutAttributes?
-    {
-        if let attrs = super.initialLayoutAttributesForAppearingItem(at: itemIndexPath) {
-            attrs.zIndex = 1 // 设为0时还有可能被覆盖
-            return attrs
-        } else {
-            return nil
         }
     }
     
@@ -147,15 +138,12 @@ class SBCollectionViewFlowLayout: UICollectionViewFlowLayout {
         })
         return attrs // 3、返回
     }
-    
-    override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath)
-        -> UICollectionViewLayoutAttributes?
-    {
+
+    override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         if elementKind == SectionBackground {
             return self.decorationViewAttrs[indexPath.section]
-        } else {
-            return super.layoutAttributesForDecorationView(ofKind: elementKind, at: indexPath)
         }
+        return super.layoutAttributesForDecorationView(ofKind: elementKind, at: indexPath)
     }
-    
 }
+
