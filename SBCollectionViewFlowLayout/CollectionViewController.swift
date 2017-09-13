@@ -11,7 +11,26 @@ import UIKit
 private let reuseIdentifier = "Cell"
 
 class CollectionViewController: UICollectionViewController, SBCollectionViewDelegateFlowLayout {
+    
+    var count = 0;
+    
+    @IBAction func refreshAction(_ sender: UIBarButtonItem) {
+        self.collectionView?.performBatchUpdates({
 
+        self.count = Int(arc4random()%13);
+        self.collectionView?.reloadSections(NSIndexSet(index: 1) as IndexSet)
+        }, completion: nil)
+    }
+    
+    @IBAction func insertAction(_ sender: UIBarButtonItem) {
+        self.collectionView?.performBatchUpdates({
+            let indexs = [IndexPath.init(item: self.count, section: 1), IndexPath.init(item: self.count + 1, section: 1), ];
+            self.count += 2
+            
+            self.collectionView?.insertItems(at: indexs)
+        }, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,11 +51,11 @@ class CollectionViewController: UICollectionViewController, SBCollectionViewDele
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-            return 1
+            return 7
         } else if section == 1 {
-            return 0
+            return self.count
         } else if section == 2 {
-            return 12
+            return 11
         }
         return 19
     }
@@ -58,9 +77,9 @@ class CollectionViewController: UICollectionViewController, SBCollectionViewDele
         if section == 0 {
             return UIColor.red
         } else if section == 1 {
-            return UIColor.yellow
+            return UIColor.green
         } else if section == 2 {
-            return UIColor.brown.withAlphaComponent(0.8)
+            return UIColor.brown
         }
         return UIColor.blue
     }
